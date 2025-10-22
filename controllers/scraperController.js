@@ -4,8 +4,22 @@ import fs from 'fs';
 import path from 'path';
 
 export const scrapeData = async (req, res) => {
-  const { query, location, maxResults } = req.body;
+  let { query, location, maxResults } = req.body;
   console.log(`Scraping data for: ${query} in ${location}, limit: ${maxResults}`);
+
+  //Validate input
+  if (!query || !location) {
+    return res.status(400).json({ message: "Query and location are required" });
+  }
+
+  //Enforce maxResults cap between 1 and 20
+  maxResults = Number(maxResults);
+  if (isNaN(maxResults) || maxResults < 1) {
+    return res.status(400).json({ message: "maxResults must be at least 1" });
+  }
+  if (maxResults > 20) {
+    maxResults = 20; // or you could throw an error instead of capping
+  }
 
   try {
     const data = await scrapeGoogleMaps(query, location, maxResults);

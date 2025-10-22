@@ -14,6 +14,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(__dirname));
 app.use(
   cors({
+    
     origin: "https://business-scraper-frontend.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
